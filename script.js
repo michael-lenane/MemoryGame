@@ -13,9 +13,7 @@ const COLORS = [
   "purple",
 ];
 
-// here is a helper function to shuffle an array
-// it returns the same array with values shuffled
-// it is based on an algorithm called Fisher Yates if you want ot research more
+// shuffle function provided by Springboard
 function shuffle(array) {
   let counter = array.length;
   while (counter > 0) {
@@ -30,9 +28,7 @@ function shuffle(array) {
 
 let shuffledColors = shuffle(COLORS);
 
-// this function loops over the array of colors
-// it creates a new div and gives it a class with the value of the color
-// it also adds an event listener for a click for each card
+// createDivsForColors function provided by Springboard
 function createDivsForColors(colorArray) {
   for (let color of colorArray) {
     const newDiv = document.createElement("div");
@@ -42,42 +38,22 @@ function createDivsForColors(colorArray) {
   }
 }
 
-// TODO: Implement this function!
+// My variables here:
 let selectionArray = [];
 let firstCard = selectionArray[0];
 let secondCard = selectionArray[1];
 let clickable = true;
+
+//my code here:
 function handleCardClick(e) {
   if (clickable === true) {
     if (e.target.classList.contains("clicked")) {
       return;
     } else {
-      e.target.classList.add("clicked");
-      selectionArray.push(e.target);
-      e.target.style.backgroundColor = e.target.classList[0];
+      displayClicked(e);
     }
-
     if (selectionArray.length > 1) {
-      clickable = false;
-      firstCard = selectionArray[0];
-      secondCard = selectionArray[1];
-      if (firstCard.className === secondCard.className) {
-        firstCard.style.backgroundColor = firstCard.style.backgroundColor;
-        secondCard.style.backgroundColor = secondCard.style.backgroundColor;
-        selectionArray.shift();
-        selectionArray.shift();
-        clickable = true;
-      } else {
-        firstCard.classList.remove("clicked");
-        secondCard.classList.remove("clicked");
-        selectionArray.shift();
-        selectionArray.shift();
-        setTimeout(function () {
-          firstCard.style.backgroundColor = "white";
-          secondCard.style.backgroundColor = "white";
-          clickable = true;
-        }, 2000);
-      }
+      handleSecondClick();
     } else {
       firstCard = e.target.classList[0];
     }
@@ -86,5 +62,47 @@ function handleCardClick(e) {
   }
 }
 
-// when the DOM loads
+//functions used found below
+function displayClicked(e) {
+  e.target.classList.add("clicked");
+  selectionArray.push(e.target);
+  e.target.style.backgroundColor = e.target.classList[0];
+}
+
+function handleSecondClick() {
+  clickable = false;
+  firstCard = selectionArray[0];
+  secondCard = selectionArray[1];
+  if (firstCard.className === secondCard.className) {
+    foundMatch();
+  } else {
+    removeSelectionClasses();
+    resetSelectionArray();
+  }
+}
+
+function foundMatch() {
+  firstCard.style.backgroundColor = firstCard.style.backgroundColor;
+  secondCard.style.backgroundColor = secondCard.style.backgroundColor;
+  selectionArray.shift();
+  selectionArray.shift();
+  clickable = true;
+}
+
+function removeSelectionClasses() {
+  firstCard.classList.remove("clicked");
+  secondCard.classList.remove("clicked");
+}
+
+function resetSelectionArray() {
+  selectionArray.shift();
+  selectionArray.shift();
+  setTimeout(function () {
+    firstCard.style.backgroundColor = "white";
+    secondCard.style.backgroundColor = "white";
+    clickable = true;
+  }, 2000);
+}
+
+// when DOM loads - springboard function
 createDivsForColors(shuffledColors);
